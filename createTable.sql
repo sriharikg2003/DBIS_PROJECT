@@ -1,233 +1,161 @@
-create table user
-	(userid		int,
-	 username		varchar(255),
-	 email		numeric(255),
-     password	varchar(255),
-     firstname	varchar(255),
-     lastname	varchar(255),
-     dob Date,
-	 primary key (userid)
-	);
+-- Addresses table
+CREATE TABLE addresses (
+    addressid INT PRIMARY KEY,
+    street VARCHAR(255),
+    city VARCHAR(255),
+    state VARCHAR(255),
+    country VARCHAR(255),
+    postalcode INT
+);
 
-create table deliveryperson
-	(userid		int,
-	 username		varchar(255),
-	 email		numeric(255),
-     password	varchar(255),
-     firstname	varchar(255),
-     lastname	varchar(255),
-     dob Date,
-	 primary key (userid)
-	);
+-- Users table
+CREATE TABLE users (
+    userid INT PRIMARY KEY,
+    username VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    firstname VARCHAR(255),
+    lastname VARCHAR(255),
+    addressid INT,
+    dob DATE,
+    FOREIGN KEY (addressid) REFERENCES addresses(addressid)
+);
 
-create table addresses
-	(addressid		int, 
-	 userid		int, 
-	 street		varchar(255),      
-     city varchar(255),
-     state varchar(255),
-     country varchar(255),
-     postalcode  int,
-	 primary key (addressid)
-	);
+-- Deliveryperson table
+CREATE TABLE deliveryperson (
+    userid INT PRIMARY KEY,
+    username VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    firstname VARCHAR(255),
+    lastname VARCHAR(255),
+    dob DATE
+);
 
-create table product
-	(
-        productid  int, 
-        productname  varchar(255),  
-        description Date,
-        price real,
-        stockqty int,
-        categoryid	  int,
-        
-	);
+-- Categories table
+CREATE TABLE categories (
+    categoryid INT PRIMARY KEY,
+    category VARCHAR(255)
+);
 
-create table order
-	(
-        orderid  int, 
-        userid  int,
-        orderdate Date,
-        totalamt real,
-        shippingaddressid int,
-        paymentmethodid	  int,
-        
-	);
+-- Product table
+CREATE TABLE product (
+    productid INT PRIMARY KEY,
+    productname VARCHAR(255),
+    description VARCHAR(255),
+    price REAL,
+    stockqty INT,
+    categoryid INT,
+    FOREIGN KEY (categoryid) REFERENCES categories(categoryid)
+);
 
-create table reviews
-	(
-        reviewid int,
-        userid int,
-        productid int,
-        rating integer,
-        reviewtext varchar(255),
-        reviewdate Date,
-	);
+-- Reviews table
+CREATE TABLE reviews (
+    reviewid INT PRIMARY KEY,
+    userid INT,
+    productid INT,
+    rating INT,
+    reviewtext VARCHAR(255),
+    reviewdate DATE,
+    FOREIGN KEY (userid) REFERENCES users(userid),
+    FOREIGN KEY (productid) REFERENCES product(productid)
+);
 
-create table coupon
-	(
-        couponid int,
-        couponcode int,
-        discountpercentage real,
-        expirationdate Date,
-        orderid int,
-	);
+-- Seller table
+CREATE TABLE seller (
+    sellerid INT PRIMARY KEY,
+    sellername VARCHAR(255),
+    selleremail VARCHAR(255),
+    sellerphone INT,
+    addressid INT,
+    FOREIGN KEY (addressid) REFERENCES addresses(addressid)
+);
 
+-- Wallet table
+CREATE TABLE wallet (
+    walletid INT PRIMARY KEY,
+    userid INT,
+    balance REAL,
+    FOREIGN KEY (userid) REFERENCES users(userid)
+);
 
-create table seller
-	(
-        sellerid int,
-        sellername varchar(255),
-        selleremail varchar(255),
-        sellerphone int,
-	);
+-- Paymentsmethod table
+CREATE TABLE paymentsmethod (
+    paymentmethodid INT PRIMARY KEY,
+    userid INT,
+    paymenttype VARCHAR(255),
+    FOREIGN KEY (userid) REFERENCES users(userid)
+);
 
-create table wallet
-	(
-        walletid int,
-        userid int,
-        balance real,
-	);
+-- Order table
+CREATE TABLE "order" (
+    orderid INT PRIMARY KEY,
+    userid INT,
+    orderdate DATE,
+    totalamt REAL,
+    shippingaddressid INT,
+    paymentmethodid INT,
+    FOREIGN KEY (userid) REFERENCES users(userid),
+    FOREIGN KEY (shippingaddressid) REFERENCES addresses(addressid),
+    FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
+);
 
-create table paymentsmethod
-	(
-        paymentmethodid int,
-        userid int,
-        paymenttype varchar(255),
-        cardnumber int,
-        expirydate Date
-        billingaddressid int,
-	);
+-- Orderitem table
+CREATE TABLE orderitem (
+    orderitemid INT PRIMARY KEY,
+    orderid INT,
+    productid INT,
+    quantity INT,
+    subtotal REAL,
+    paymentmethodid INT,
+    FOREIGN KEY (orderid) REFERENCES "order"(orderid),
+    FOREIGN KEY (productid) REFERENCES product(productid),
+    FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
+);
 
-create table orderitem
-	(
-        orderitemid int,
-        orderid int,
-        productid int,
-        quantity int,
-        subtotal real,
-        paymentmethodid int,
-	);
+-- Shipment table
+CREATE TABLE shipment (
+    shipmentid INT PRIMARY KEY,
+    orderid INT,
+    shipmentdate DATE,
+    estimateddeliverydate DATE,
+    actualdeliverydate DATE,
+    shippingstatus VARCHAR(255),
+    FOREIGN KEY (orderid) REFERENCES "order"(orderid)
+);
 
-create table categories
-	(
-        categoryid int,
-        category varchar(255),
-	);
+-- Coupon table
+CREATE TABLE coupon (
+    couponid INT PRIMARY KEY,
+    couponcode INT,
+    discountpercentage REAL,
+    expirationdate DATE,
+    orderid INT,
+    FOREIGN KEY (orderid) REFERENCES "order"(orderid)
+);
 
-create table shipment
-	(
-        shipmentid int,
-        orderid int,
-        shipmentdate Date,
-        estimateddeliverydate Date,
-        actualdeliverydate Date,
-        shippingstatus varchar(255)
+-- Sellerproducts table
+CREATE TABLE sellerproducts (
+    sellerproductid INT PRIMARY KEY,
+    sellerid INT,
+    productid INT,
+    FOREIGN KEY (sellerid) REFERENCES seller(sellerid),
+    FOREIGN KEY (productid) REFERENCES product(productid)
+);
 
-	);
+-- Wishlists table
+CREATE TABLE wishlists (
+    wishlistid INT PRIMARY KEY,
+    userid INT,
+    FOREIGN KEY (userid) REFERENCES users(userid)
+);
 
-create table sellerproducts
-	(
-        sellerproductid int,
-        sellerid int,
-        productid int,
-	);
+-- Wishlistitem table
+CREATE TABLE wishlistitem (
+    wishlistitemid INT PRIMARY KEY,
+    wishlistid INT,
+    productid INT,
+    FOREIGN KEY (wishlistid) REFERENCES wishlists(wishlistid),
+    FOREIGN KEY (productid) REFERENCES product(productid)
+);
 
-create table wishlistitem
-	(
-        wishlistitemid int,
-        wishlistid int,
-        productid int,
-	);
-
-
-create table wishlists
-	(
-        wishlistid int,
-        userid int,
-	);
-
-
-
-
--- -- ----------------------
--- create table section
--- 	(course_id		varchar(8), 
---          sec_id			varchar(8),
--- 	 semester		varchar(6)
--- 		check (semester in ('Fall', 'Winter', 'Spring', 'Summer')), 
--- 	 year			numeric(4,0) check (year > 1701 and year < 2100), 
--- 	 building		varchar(15),
--- 	 room_number		varchar(7),
--- 	 time_slot_id		varchar(4),
--- 	 primary key (course_id, sec_id, semester, year),
--- 	 foreign key (course_id) references course (course_id)
--- 		on delete cascade,
--- 	 foreign key (building, room_number) references classroom (building, room_number)
--- 		on delete set null
--- 	);
-
--- create table teaches
--- 	(ID			varchar(5), 
--- 	 course_id		varchar(8),
--- 	 sec_id			varchar(8), 
--- 	 semester		varchar(6),
--- 	 year			numeric(4,0),
--- 	 primary key (ID, course_id, sec_id, semester, year),
--- 	 foreign key (course_id, sec_id, semester, year) references section (course_id, sec_id, semester, year)
--- 		on delete cascade,
--- 	 foreign key (ID) references instructor (ID)
--- 		on delete cascade
--- 	);
-
--- create table student
--- 	(ID			varchar(5), 
--- 	 name			varchar(20) not null, 
--- 	 dept_name		varchar(20), 
--- 	 tot_cred		numeric(3,0) check (tot_cred >= 0),
--- 	 primary key (ID),
--- 	 foreign key (dept_name) references department (dept_name)
--- 		on delete set null
--- 	);
-
--- create table takes
--- 	(ID			varchar(5), 
--- 	 course_id		varchar(8),
--- 	 sec_id			varchar(8), 
--- 	 semester		varchar(6),
--- 	 year			numeric(4,0),
--- 	 grade		        varchar(2),
--- 	 primary key (ID, course_id, sec_id, semester, year),
--- 	 foreign key (course_id, sec_id, semester, year) references section (course_id, sec_id, semester, year)
--- 		on delete cascade,
--- 	 foreign key (ID) references student (ID)
--- 		on delete cascade
--- 	);
-
--- create table advisor
--- 	(s_ID			varchar(5),
--- 	 i_ID			varchar(5),
--- 	 primary key (s_ID),
--- 	 foreign key (i_ID) references instructor (ID)
--- 		on delete set null,
--- 	 foreign key (s_ID) references student (ID)
--- 		on delete cascade
--- 	);
-
--- create table time_slot
--- 	(time_slot_id		varchar(4),
--- 	 day			varchar(1),
--- 	 start_hr		numeric(2) check (start_hr >= 0 and start_hr < 24),
--- 	 start_min		numeric(2) check (start_min >= 0 and start_min < 60),
--- 	 end_hr			numeric(2) check (end_hr >= 0 and end_hr < 24),
--- 	 end_min		numeric(2) check (end_min >= 0 and end_min < 60),
--- 	 primary key (time_slot_id, day, start_hr, start_min)
--- 	);
-
--- create table prereq
--- 	(course_id		varchar(8), 
--- 	 prereq_id		varchar(8),
--- 	 primary key (course_id, prereq_id),
--- 	 foreign key (course_id) references course (course_id)
--- 		on delete cascade,
--- 	 foreign key (prereq_id) references course (course_id)
--- 	);
