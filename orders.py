@@ -61,6 +61,7 @@ def placeOrder(userid):
     viewProducts()
     myorderitemsid=[]
     quantity = []
+    selleridarray = []
     # i = input("Enter number ")
     ctr = ""
     while(True):
@@ -78,12 +79,14 @@ def placeOrder(userid):
     price = []
     for k in range(len(myorderitemsid)):
 
-        query = f"select stockqty,price from product where productid={myorderitemsid[k]};"
+        query = f"select stockqty,price,sellerid from product where productid={myorderitemsid[k]};"
         cursor.execute(query)
         rows = cursor.fetchall()
-        x,y = rows[0]
+        x,y,z = rows[0]
+
         stk.append(int(x))
         price.append(y)
+        selleridarray.append(int(z))
     
 
 
@@ -106,18 +109,20 @@ def placeOrder(userid):
     confirm  = input("Click 1 to confirm")
     if confirm=="1":
         print("Proceeding to payments page...")
-        moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity)
+        moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,selleridarray, price, stk)
     else :
         print("Order cancelled ")
         
 
-def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity):
+def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,selleridarray, price, stk):
+
     query = f"select balance from wallet where userid={userid};"
     cursor.execute(query)
     rows = cursor.fetchall()
     walletproceed = False
     codproceed = False
-    availablebalance = rows[0]
+
+    availablebalance = rows[0][0]
     if availablebalance<totalamt:
         print("You must proceed to COD due to insufficient balance")
         codproceed  = True
@@ -133,7 +138,36 @@ def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity):
             return 
 
     if(walletproceed):
+        new_balance = availablebalance - totalamt 
+        query =  f"UPDATE wallet SET balance = {new_balance} WHERE userid = {userid};"
+        cursor.execute(query)
         
+        query = f"select balance from wallet where userid={userid};"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        print(f"Amount deduced from your wallet.\nCurrent Balance: {rows[0][0]}")
+
+        for k in range(len(selleridarray)):
+            value = quantity[k] * price[k]
+            query = f"select balance from wallet where userid={selleridarray[k]};"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            availablebalance = rows[0][0]
+            query = f"UPDATE wallet SET balance = {value + availablebalance} WHERE userid = {selleridarray[k]};"
+            print("seller id ",selleridarray[k])
+            cursor.execute(query)
+
+    for k in range(len(selleridarray)):
+
+        value = stk[k] - quantity[k]
+        query = f"UPDATE product SET stockqty = {value} WHERE productid = {myorderitemsid[k]};"
+        cursor.execute(query) 
+
+    
+    print("Successfull")
+    conn.commit()
+
+
 
 # viewProducts()
 placeOrder(1)
