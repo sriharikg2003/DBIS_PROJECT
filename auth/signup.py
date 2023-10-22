@@ -63,21 +63,21 @@ def signup():
             signup()
         if send_otp(email, otp):
             if verifyOTP(otp):
-                add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING userid"
+                add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING *"
                 cursor.execute(add_user_query)
-                new_user_id = cursor.fetchone()[0]
+                new_user = cursor.fetchone()[0]
                 conn.commit()
                 print("Signed up successfully")
-                return new_user_id
+                return new_user
             else:
                 while verifyOTP(otp) == False:
                     verifyOTP(otp)
-                add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING userid"
+                add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING *"
                 cursor.execute(add_user_query)
-                new_user_id = cursor.fetchone()[0]
+                new_user = cursor.fetchone()[0]
                 conn.commit()
                 print("Signed up successfully")
-                return new_user_id
+                return new_user
     except psycopg2.DatabaseError as error:
         conn.rollback()
         print(error)
