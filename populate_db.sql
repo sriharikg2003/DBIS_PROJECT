@@ -13,18 +13,18 @@ VALUES
     ('888 Redwood St', 'Atlanta', 'GA', 'USA', '30301');
 
 -- Users Table
-INSERT INTO users (username, email, password, firstname, lastname, addressid, dob, usertype)
+INSERT INTO users ( email, password, firstname, lastname, addressid, dob, usertype)
 VALUES
-    ('john_doe', 'john.doe@email.com', 'password123', 'John', 'Doe', 1, '1990-01-15', 'customer'),
-    ('jane_smith', 'jane.smith@email.com', 'secret456', 'Jane', 'Smith', 2,  '1990-01-15','delivery-person'),
-    ('alice_green', 'alice.green@email.com', 'green123', 'Alice', 'Green', 3, '1990-01-15', 'seller'),
-    ('bob_jones', 'bob.jones@email.com', 'jones456', 'Bob', 'Jones', 1, '1990-01-15', 'customer'),
-    ('susan_white', 'susan.white@email.com', 'whitepass', 'Susan', 'White', 4, '1990-01-15', 'customer'),
-    ('david_brown', 'david.brown@email.com', 'brown123', 'David', 'Brown', 3, '1990-01-15', 'seller'),
-    ('sarah_harris', 'sarah.harris@email.com', 'sarah789', 'Sarah', 'Harris', 6, '1990-01-15', 'customer'),
-    ('james_wilson', 'james.wilson@email.com', 'wilson456', 'James', 'Wilson', 5, '1990-01-15', 'seller'),
-    ('emily_adams', 'emily.adams@email.com', 'adams123', 'Emily', 'Adams', 4,  '1990-01-15','customer'),
-    ('michael_clark', 'michael.clark@email.com', 'michael456', 'Michael', 'Clark', 6, '1990-01-15', 'seller');
+    ( 'john.doe@email.com', 'password123', 'John', 'Doe', 1, '1990-01-15', 'customer'),
+    ('jane.smith@email.com', 'secret456', 'Jane', 'Smith', 2,  '1990-01-15','delivery-person'),
+    ( 'alice.green@email.com', 'green123', 'Alice', 'Green', 3, '1990-01-15', 'seller'),
+    ( 'bob.jones@email.com', 'jones456', 'Bob', 'Jones', 1, '1990-01-15', 'customer'),
+    ( 'susan.white@email.com', 'whitepass', 'Susan', 'White', 4, '1990-01-15', 'customer'),
+    ('david.brown@email.com', 'brown123', 'David', 'Brown', 3, '1990-01-15', 'seller'),
+    ('sarah.harris@email.com', 'sarah789', 'Sarah', 'Harris', 6, '1990-01-15', 'customer'),
+    ('james.wilson@email.com', 'wilson456', 'James', 'Wilson', 5, '1990-01-15', 'seller'),
+    ('emily.adams@email.com', 'adams123', 'Emily', 'Adams', 4,  '1990-01-15','customer'),
+    ('michael.clark@email.com', 'michael456', 'Michael', 'Clark', 6, '1990-01-15', 'seller');
 
 
 -- Categories Table

@@ -60,14 +60,13 @@ CREATE TYPE USERTYPE_ENUM AS ENUM ('customer', 'delivery-person', 'seller', 'own
 -- Users table
 CREATE TABLE users (
     userid SERIAL PRIMARY KEY,
-    username VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255),
-    firstname VARCHAR(255),
-    lastname VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
     addressid SERIAL,
-    dob DATE,
-    usertype USERTYPE_ENUM,
+    dob DATE NOT NULL,
+    usertype USERTYPE_ENUM NOT NULL,
     FOREIGN KEY (addressid) REFERENCES addresses(addressid)
 );
 
