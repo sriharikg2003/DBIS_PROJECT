@@ -86,7 +86,7 @@ CREATE TABLE product (
     stockqty INT,
     categoryid SERIAL,
     sellerid SERIAL,
-    FOREIGN KEY (sellerid) REFERENCES users(userid)
+    FOREIGN KEY (sellerid) REFERENCES users(userid),
     FOREIGN KEY (categoryid) REFERENCES categories(categoryid)
 );
 
