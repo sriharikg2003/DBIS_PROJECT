@@ -88,4 +88,5 @@ def login():
         login()
 
 
-login()
+conn.close()
+cursor.close()

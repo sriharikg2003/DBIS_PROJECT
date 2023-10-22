@@ -84,4 +84,5 @@ def signup():
         signup()
 
 
-signup()
+conn.close()
+cursor.close()
