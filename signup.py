@@ -1,0 +1,15 @@
+import psycopg2
+import sys
+
+try:
+    conn = psycopg2.connect(
+        database="moviedb",
+        host="localhost",
+        user="postgres",
+        password="1234",
+        port=5432,
+    )
+except:
+    sys.exit("Failed to connect to the database")
+
+cursor = conn.cursor()
