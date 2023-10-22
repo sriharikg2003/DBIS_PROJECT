@@ -159,9 +159,9 @@ CREATE TABLE coupon (
     couponid SERIAL PRIMARY KEY,
     couponcode INT,
     discountpercentage REAL,
-    expirationdate timestamp,
-    orderid SERIAL,
-    FOREIGN KEY (orderid) REFERENCES orders(orderid)
+    expirationdate timestamp
+    -- orderid SERIAL,
+    -- FOREIGN KEY (orderid) REFERENCES orders(orderid)
 );
 
 -- Wishlists table

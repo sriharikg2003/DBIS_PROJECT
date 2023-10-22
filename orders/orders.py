@@ -57,81 +57,154 @@ def viewProducts():
 
 
 def placeOrder(userid):
-    print("The products are as follows:")
-    viewProducts()
-
-    query =  f"insert into  orders  (userid) values  ({userid});"
     try:
-        cursor.execute(query)
-    except psycopg2.DatabaseError as error:
-        print("Failed to fetch categories")
+        print("The products are as follows:")
+        viewProducts()
 
-    myorderitemsid=[]
-    quantity = []
-    selleridarray = []
-    # i = input("Enter number ")
-    ctr = ""
-    while(True):
-        # print("Enter product id and the quantity you want to buy")
-        i = input("Enter product id : type q to end\n")
-
-        if (i=="q"):
-            break
-        q = int(input("Enter quantity"))
-
-        myorderitemsid.append(int(i))
-        quantity.append(q)
-
-    stk = []
-    price = []
-    for k in range(len(myorderitemsid)):
-
-        query = f"select stockqty,price,sellerid from product where productid={myorderitemsid[k]};"
+        query =  f"insert into  orders  (userid) values  ({userid}) returning orderid;"
         try:
             cursor.execute(query)
-            rows = cursor.fetchall()
-            x,y,z = rows[0]
-
-            stk.append(int(x))
-            price.append(y)
-            selleridarray.append(int(z))
+            orderid = cursor.fetchone()[0]
+            print("Orderid:", orderid)
         except psycopg2.DatabaseError as error:
-            print("Failed to add order items")
-    
+            print("Orderid:", orderid)
+            print(query)
+            print("COULD NOT ADD IN ORDERS")
+            print("Failed to fetch categories")
+
+        myorderitemsid=[]
+    # quantity : quantity asked by user
+        demandedQuantity = []
+        selleridarray = []
 
 
-    for i in range(len(stk)):
-        if quantity[i] > stk[i]:
-            quantity[i] = stk[i]
-            print(f"ORDER {myorderitemsid[i]} CLIPPED DOWN TO {quantity[i]} DUE TO SHORTAGE")
+    # stk : stock actually available
+        availableQuantity = []
+        price = []
+        while(True):
+            # print("Enter product id and the quantity you want to buy")
+            i = input("Enter product id : type q to end\n")
+
+            if (i=="q"):
+                break
+            q = int(input("Enter quantity"))
+            query = f"select stockqty,price,sellerid from product where productid={int(i)};"
+            try:
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                x,y,z = rows[0]
+                if int(x) >= q:
+                    availableQuantity.append(int(x))
+                    price.append(y)
+                    selleridarray.append(int(z))
+                    myorderitemsid.append(int(i))
+                    demandedQuantity.append(q)
+                else:
+                    print("Stock not available.")
+
+            except psycopg2.DatabaseError as error:
+                print("Failed to add order items")
+
+
+
+        
+                
+        print("\n\nYOUR ORDERS ARE:")
             
-    print("\n\nYOUR ORDERS ARE:")
+        totalamt = 0
+        print("ProductID    Qty    Price    Subtotal")
+        for i in range(len(availableQuantity)):
+            subtotal = demandedQuantity[i] * price[i]
+            totalamt += subtotal
+            print(f"{myorderitemsid[i]:<12} {demandedQuantity[i]:<6} ${price[i]:<7} ${subtotal:<9}")
+
+
+        discountpercentage = applycoupon()
+        try:
+            totalamt = totalamt*(1-(discountpercentage/100))
+        except :
+            print("ERror in copupon id")
+        print(f"TOTAL BILL AMT  ${totalamt}")
+
+
+
+        confirm  = input("Click 1 to confirm")
+        if confirm=="1":
+            print("Proceeding to payments page...")
+            try:
+                for k in range(len(myorderitemsid)):
+                    
+                    query =  f"insert into  orderitem  (orderid,productid, quantity ) values  ({orderid},{myorderitemsid[k]},{demandedQuantity[k]});"
+                    try:
+                        cursor.execute(query)
+                    except :
+                        print("Failed to insert in orderitem")
+
+            except :
+                print("Error in adding in order item")
+            
+            
+            moneyTransactionManagement(userid, totalamt,myorderitemsid,demandedQuantity,selleridarray, price, availableQuantity)
+
+
+            conn.commit()
+        else :
+            print("Order cancelled ")
+    except:
+        print("Aborting all changes ")
+        conn.rollback()
+            
+
+def applycoupon():
+    try:
+        # Get the current timestamp
+        cursor.execute("SELECT NOW()")
+        current_timestamp = cursor.fetchone()[0]
         
-    totalamt = 0
-    print("ProductID    Qty    Price    Subtotal")
-    for i in range(len(stk)):
-        subtotal = quantity[i] * price[i]
-        totalamt += subtotal
-        print(f"{myorderitemsid[i]:<12} {quantity[i]:<6} ${price[i]:<7} ${subtotal:<9}")
+        # Fetch non-expired coupons
+        query = """
+            SELECT couponid, couponcode, discountpercentage
+            FROM coupon
+            WHERE expirationdate > %s ;
+        """
+        cursor.execute(query, (current_timestamp,))
+        rows = cursor.fetchall()
 
-    print(f"TOTAL BILL AMT  ${totalamt}")
+        if len(rows) == 0:
+            print("No non-expired coupons available.")
+            return 0
+        else:
+            print("Your coupons are:")
+            print("{:<12} {:<15} {:<18}".format("Coupon ID", "Coupon Code", "Discount Percentage"))
+            print("-" * 45)
+
+            for row in rows:
+                print("{:<12} {:<15} {:<18}".format(row[0], row[1], f"{row[2]}%"))
+
+            coupon_id = input("Enter COUPON ID you want to use: ")
+            query = "SELECT discountpercentage FROM coupon WHERE couponid = %s;"
+            cursor.execute(query, (coupon_id,))
+            discount_percentage_tuple = cursor.fetchone()
+            
+            if discount_percentage_tuple:
+                discount_percentage = discount_percentage_tuple[0]
+                print(f"Selected coupon's discount percentage: {discount_percentage}%")
+                return discount_percentage
+            else:
+                print("Coupon not found.")
+
+                return applycoupon()
+            
+    except psycopg2.DatabaseError as error:
+        print("Error:", error)
 
 
 
-    confirm  = input("Click 1 to confirm")
-    if confirm=="1":
-        print("Proceeding to payments page...")
-        moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,selleridarray, price, stk)
-    else :
-        print("Order cancelled ")
-        
 
-def updateOrderItems():
-    pass
-
-def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,selleridarray, price, stk):
+def moneyTransactionManagement(userid, totalamt,myorderitemsid,demandedQuantity,selleridarray, price, availableQuantity):
 
     query = f"select balance from wallet where userid={userid};"
+    
     cursor.execute(query)
     rows = cursor.fetchall()
     walletproceed = False
@@ -154,8 +227,15 @@ def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,sellerid
             print("Transaction failed")
             return 
 
-    query =  f"insert into  paymentsmethod  (userid, paymenttype) values  ( {userid} , {ptype});"
-    cursor.execute(query)
+    query =  f"insert into  paymentsmethod  (userid, paymenttype) values  ( {userid} , '{ptype}') returning paymentmethodid;"
+    try:
+        print(query)
+        cursor.execute(query)
+        paymentmethodid = cursor.fetchone()[0]
+
+        print("INSERT INTO paymentsmethod ")
+    except:
+        print("Could not insert into paymentsmethod")
 
 
     if(walletproceed):
@@ -169,7 +249,7 @@ def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,sellerid
         print(f"Amount deduced from your wallet.\nCurrent Balance: {rows[0][0]}")
 
         for k in range(len(selleridarray)):
-            value = quantity[k] * price[k]
+            value = demandedQuantity[k] * price[k]
             query = f"select balance from wallet where userid={selleridarray[k]};"
             cursor.execute(query)
             rows = cursor.fetchall()
@@ -180,15 +260,22 @@ def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,sellerid
 
     for k in range(len(selleridarray)):
 
-        value = stk[k] - quantity[k]
+        value = availableQuantity[k] - demandedQuantity[k]
         query = f"UPDATE product SET stockqty = {value} WHERE productid = {myorderitemsid[k]};"
         cursor.execute(query) 
-
+    try:
+        query = f"insert into p product SET stockqty = {value} WHERE productid = {myorderitemsid[k]};"
+        cursor.execute(query)
+    except:
+        print("insert into payment method id") 
     
+    try:
+        query =  f"update  orders  set userid = {userid} , orderdate = NOW()  , totalamt = {totalamt} where  paymentmethod = {paymentmethodid};"
+    except :
+        print(" could not update order")
     print("Successfull")
-    conn.commit()
 
 
 
 # viewProducts()
-placeOrder(1)
+placeOrder(2)
