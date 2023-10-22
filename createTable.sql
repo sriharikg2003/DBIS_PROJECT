@@ -117,6 +117,7 @@ CREATE TABLE seller (
     sellerid SERIAL PRIMARY KEY,
     sellername VARCHAR(255),
     selleremail VARCHAR(255),
+    sellerpassword VARCHAR(255),
     sellerphone VARCHAR(20),
     addressid INT,
     FOREIGN KEY (addressid) REFERENCES addresses(addressid)
@@ -172,7 +173,9 @@ CREATE TABLE shipment (
     estimateddeliverydate DATE,
     actualdeliverydate DATE,
     shippingstatus VARCHAR(255),
-    FOREIGN KEY (orderid) REFERENCES "order"(orderid)
+    UserID INT,
+    FOREIGN KEY (orderid) REFERENCES "order"(orderid),
+    FOREIGN KEY (UserID) REFERENCES deliveryperson(userid)
 );
 
 -- Coupon table
@@ -209,4 +212,3 @@ CREATE TABLE wishlistitem (
     FOREIGN KEY (wishlistid) REFERENCES wishlists(wishlistid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );
-
