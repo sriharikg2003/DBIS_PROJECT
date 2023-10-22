@@ -106,6 +106,8 @@ def placeOrder(userid):
 
     print(f"TOTAL BILL AMT  ${totalamt}")
 
+    
+
     confirm  = input("Click 1 to confirm")
     if confirm=="1":
         print("Proceeding to payments page...")
@@ -114,6 +116,9 @@ def placeOrder(userid):
         print("Order cancelled ")
         
 
+def updateOrderItems():
+    pass
+
 def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,selleridarray, price, stk):
 
     query = f"select balance from wallet where userid={userid};"
@@ -121,7 +126,7 @@ def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,sellerid
     rows = cursor.fetchall()
     walletproceed = False
     codproceed = False
-
+    
     availablebalance = rows[0][0]
     if availablebalance<totalamt:
         print("You must proceed to COD due to insufficient balance")
@@ -130,12 +135,18 @@ def moneyTransactionManagement(userid, totalamt,myorderitemsid,quantity,sellerid
         paymentType = input("Enter 1 for Wallet Payment : 2 for Cash on Delivery")
         if(paymentType=="1"):
             walletproceed = True    
+            ptype = "Wallet"
         
         elif paymentType=="2":
             codproceed = True
+            ptype = "COD"
         else:
             print("Transaction failed")
             return 
+
+    query =  f"insert into  paymentsmethod  (userid, paymenttype) values  ( {userid} , {ptype});"
+    cursor.execute(query)
+
 
     if(walletproceed):
         new_balance = availablebalance - totalamt 

@@ -97,7 +97,7 @@ CREATE TABLE reviews (
     productid SERIAL,
     rating SERIAL,
     reviewtext TEXT,
-    reviewdate DATE,
+    reviewdate timestamp,
     FOREIGN KEY (userid) REFERENCES users(userid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );
@@ -122,7 +122,7 @@ CREATE TABLE paymentsmethod (
 CREATE TABLE orders (
     orderid SERIAL PRIMARY KEY,
     userid SERIAL,
-    orderdate DATE,
+    orderdate timestamp,
     totalamt REAL,
     shippingaddressid SERIAL,
     paymentmethodid SERIAL,
@@ -145,9 +145,9 @@ CREATE TABLE orderitem (
 CREATE TABLE shipment (
     shipmentid SERIAL PRIMARY KEY,
     orderid SERIAL,
-    shipmentdate DATE,
-    estimateddeliverydate DATE,
-    actualdeliverydate DATE,
+    shipmentdate timestamp,
+    estimateddeliverydate timestamp,
+    actualdeliverydate timestamp,
     shippingstatus VARCHAR(255),
     deliverypersonID SERIAL,
     FOREIGN KEY (orderid) REFERENCES orders(orderid),
@@ -159,7 +159,7 @@ CREATE TABLE coupon (
     couponid SERIAL PRIMARY KEY,
     couponcode INT,
     discountpercentage REAL,
-    expirationdate DATE,
+    expirationdate timestamp,
     orderid SERIAL,
     FOREIGN KEY (orderid) REFERENCES orders(orderid)
 );
