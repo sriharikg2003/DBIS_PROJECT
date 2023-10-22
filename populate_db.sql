@@ -153,20 +153,6 @@ VALUES
     (77777, 10.0, '2023-10-31', 9),
     (88888, 15.0, '2023-10-31', 10);
 
--- Sellerproducts Table
-INSERT INTO sellerproducts (sellerid, productid)
-VALUES
-    (3, 1),
-    (6, 2),
-    (3, 3),
-    (10, 4),
-    (7, 5),
-    (6, 6),
-    (9, 7),
-    (4, 8),
-    (10, 9),
-    (3, 10);
-
 -- Wishlists Table
 INSERT INTO wishlists (userid)
 VALUES
