@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS shipment;
 DROP TABLE IF EXISTS orderitem;
 
 -- Drop the 'order' table
-DROP TABLE IF EXISTS order;
+DROP TABLE IF EXISTS orders;
 
 -- Drop the 'paymentsmethod' table
 DROP TABLE IF EXISTS paymentsmethod;
@@ -118,7 +118,7 @@ CREATE TABLE paymentsmethod (
 );
 
 -- Order table
-CREATE TABLE order (
+CREATE TABLE orders (
     orderid SERIAL PRIMARY KEY,
     userid SERIAL,
     orderdate DATE,
@@ -136,11 +136,8 @@ CREATE TABLE orderitem (
     orderid SERIAL,
     productid SERIAL,
     quantity INT,
-    subtotal REAL,
-    paymentmethodid SERIAL,
-    FOREIGN KEY (orderid) REFERENCES order(orderid),
-    FOREIGN KEY (productid) REFERENCES product(productid),
-    FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
+    FOREIGN KEY (orderid) REFERENCES orders(orderid),
+    FOREIGN KEY (productid) REFERENCES product(productid)
 );
 
 -- Shipment table
@@ -151,9 +148,9 @@ CREATE TABLE shipment (
     estimateddeliverydate DATE,
     actualdeliverydate DATE,
     shippingstatus VARCHAR(255),
-    UserID SERIAL,
-    FOREIGN KEY (orderid) REFERENCES order(orderid),
-    FOREIGN KEY (UserID) REFERENCES deliveryperson(userid)
+    deliverypersonID SERIAL,
+    FOREIGN KEY (orderid) REFERENCES orders(orderid),
+    FOREIGN KEY (deliverypersonID) REFERENCES users(userid)
 );
 
 -- Coupon table
@@ -163,7 +160,7 @@ CREATE TABLE coupon (
     discountpercentage REAL,
     expirationdate DATE,
     orderid SERIAL,
-    FOREIGN KEY (orderid) REFERENCES order(orderid)
+    FOREIGN KEY (orderid) REFERENCES orders(orderid)
 );
 
 -- Sellerproducts table
@@ -171,7 +168,7 @@ CREATE TABLE sellerproducts (
     sellerproductid SERIAL PRIMARY KEY,
     sellerid SERIAL,
     productid SERIAL,
-    FOREIGN KEY (sellerid) REFERENCES user(userid),
+    FOREIGN KEY (sellerid) REFERENCES users(userid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );
 
