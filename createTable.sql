@@ -1,5 +1,3 @@
--- Drop tables in reverse order to avoid foreign key constraints
-
 -- Drop Wishlistitem table
 DROP TABLE IF EXISTS wishlistitem;
 
@@ -19,16 +17,13 @@ DROP TABLE IF EXISTS shipment;
 DROP TABLE IF EXISTS orderitem;
 
 -- Drop Order table
-DROP TABLE IF EXISTS "order";
+DROP TABLE IF EXISTS order;
 
 -- Drop Paymentsmethod table
 DROP TABLE IF EXISTS paymentsmethod;
 
 -- Drop Wallet table
 DROP TABLE IF EXISTS wallet;
-
--- Drop Seller table
-DROP TABLE IF EXISTS seller;
 
 -- Drop Reviews table
 DROP TABLE IF EXISTS reviews;
@@ -38,9 +33,6 @@ DROP TABLE IF EXISTS product;
 
 -- Drop Categories table
 DROP TABLE IF EXISTS categories;
-
--- Drop Deliveryperson table
-DROP TABLE IF EXISTS deliveryperson;
 
 -- Drop Users table
 DROP TABLE IF EXISTS users;
@@ -67,21 +59,12 @@ CREATE TABLE users (
     password VARCHAR(255),
     firstname VARCHAR(255),
     lastname VARCHAR(255),
-    addressid INT,
+    addressid SERIAL,
     dob DATE,
+    usertype VARCHAR('customer','delivery-person','seller','owner','admin'),
     FOREIGN KEY (addressid) REFERENCES addresses(addressid)
 );
 
--- Deliveryperson table
-CREATE TABLE deliveryperson (
-    userid SERIAL PRIMARY KEY,
-    username VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255),
-    firstname VARCHAR(255),
-    lastname VARCHAR(255),
-    dob DATE
-);
 
 -- Categories table
 CREATE TABLE categories (
@@ -96,37 +79,26 @@ CREATE TABLE product (
     description TEXT,
     price REAL,
     stockqty INT,
-    categoryid INT,
+    categoryid SERIAL,
     FOREIGN KEY (categoryid) REFERENCES categories(categoryid)
 );
 
 -- Reviews table
 CREATE TABLE reviews (
     reviewid SERIAL PRIMARY KEY,
-    userid INT,
-    productid INT,
-    rating INT,
+    userid SERIAL,
+    productid SERIAL,
+    rating SERIAL,
     reviewtext TEXT,
     reviewdate DATE,
     FOREIGN KEY (userid) REFERENCES users(userid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );
 
--- Seller table
-CREATE TABLE seller (
-    sellerid SERIAL PRIMARY KEY,
-    sellername VARCHAR(255),
-    selleremail VARCHAR(255),
-    sellerpassword VARCHAR(255),
-    sellerphone VARCHAR(20),
-    addressid INT,
-    FOREIGN KEY (addressid) REFERENCES addresses(addressid)
-);
-
 -- Wallet table
 CREATE TABLE wallet (
     walletid SERIAL PRIMARY KEY,
-    userid INT,
+    userid SERIAL,
     balance REAL,
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
@@ -134,19 +106,19 @@ CREATE TABLE wallet (
 -- Paymentsmethod table
 CREATE TABLE paymentsmethod (
     paymentmethodid SERIAL PRIMARY KEY,
-    userid INT,
+    userid SERIAL,
     paymenttype VARCHAR(255),
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
 -- Order table
-CREATE TABLE "order" (
+CREATE TABLE order(
     orderid SERIAL PRIMARY KEY,
-    userid INT,
+    userid SERIAL,
     orderdate DATE,
     totalamt REAL,
-    shippingaddressid INT,
-    paymentmethodid INT,
+    shippingaddressid SERIAL,
+    paymentmethodid SERIAL,
     FOREIGN KEY (userid) REFERENCES users(userid),
     FOREIGN KEY (shippingaddressid) REFERENCES addresses(addressid),
     FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
@@ -155,12 +127,12 @@ CREATE TABLE "order" (
 -- Orderitem table
 CREATE TABLE orderitem (
     orderitemid SERIAL PRIMARY KEY,
-    orderid INT,
-    productid INT,
+    orderid SERIAL,
+    productid SERIAL,
     quantity INT,
     subtotal REAL,
-    paymentmethodid INT,
-    FOREIGN KEY (orderid) REFERENCES "order"(orderid),
+    paymentmethodid SERIAL,
+    FOREIGN KEY (orderid) REFERENCES order(orderid),
     FOREIGN KEY (productid) REFERENCES product(productid),
     FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
 );
@@ -168,13 +140,13 @@ CREATE TABLE orderitem (
 -- Shipment table
 CREATE TABLE shipment (
     shipmentid SERIAL PRIMARY KEY,
-    orderid INT,
+    orderid SERIAL,
     shipmentdate DATE,
     estimateddeliverydate DATE,
     actualdeliverydate DATE,
     shippingstatus VARCHAR(255),
-    UserID INT,
-    FOREIGN KEY (orderid) REFERENCES "order"(orderid),
+    UserID SERIAL,
+    FOREIGN KEY (orderid) REFERENCES order(orderid),
     FOREIGN KEY (UserID) REFERENCES deliveryperson(userid)
 );
 
@@ -184,31 +156,31 @@ CREATE TABLE coupon (
     couponcode INT,
     discountpercentage REAL,
     expirationdate DATE,
-    orderid INT,
-    FOREIGN KEY (orderid) REFERENCES "order"(orderid)
+    orderid SERIAL,
+    FOREIGN KEY (orderid) REFERENCES order(orderid)
 );
 
 -- Sellerproducts table
 CREATE TABLE sellerproducts (
     sellerproductid SERIAL PRIMARY KEY,
-    sellerid INT,
-    productid INT,
-    FOREIGN KEY (sellerid) REFERENCES seller(sellerid),
+    sellerid SERIAL,
+    productid SERIAL,
+    FOREIGN KEY (sellerid) REFERENCES user(userid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );
 
 -- Wishlists table
 CREATE TABLE wishlists (
     wishlistid SERIAL PRIMARY KEY,
-    userid INT,
+    userid SERIAL,
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
 -- Wishlistitem table
 CREATE TABLE wishlistitem (
     wishlistitemid SERIAL PRIMARY KEY,
-    wishlistid INT,
-    productid INT,
+    wishlistid SERIAL,
+    productid SERIAL,
     FOREIGN KEY (wishlistid) REFERENCES wishlists(wishlistid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );
