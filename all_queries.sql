@@ -190,7 +190,7 @@ WHERE o.totalamt >= 5000;
 -- 26)  Retrieve the shipment details for a specific order, including estimated and actual delivery dates.
 SELECT s.shipmentid, s.estimateddeliverydate, s.actualdeliverydate, s.shippingstatus
 FROM shipment s
-WHERE s.orderid = :order_id;
+WHERE s.orderid = 1;
 
 
 -- 27) List orders with shipments that are overdue.
