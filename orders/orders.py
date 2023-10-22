@@ -59,6 +59,13 @@ def viewProducts():
 def placeOrder(userid):
     print("The products are as follows:")
     viewProducts()
+
+    query =  f"insert into  orders  (userid) values  ({userid});"
+    try:
+        cursor.execute(query)
+    except psycopg2.DatabaseError as error:
+        print("Failed to fetch categories")
+
     myorderitemsid=[]
     quantity = []
     selleridarray = []
@@ -80,13 +87,16 @@ def placeOrder(userid):
     for k in range(len(myorderitemsid)):
 
         query = f"select stockqty,price,sellerid from product where productid={myorderitemsid[k]};"
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        x,y,z = rows[0]
+        try:
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            x,y,z = rows[0]
 
-        stk.append(int(x))
-        price.append(y)
-        selleridarray.append(int(z))
+            stk.append(int(x))
+            price.append(y)
+            selleridarray.append(int(z))
+        except psycopg2.DatabaseError as error:
+            print("Failed to add order items")
     
 
 
@@ -106,7 +116,7 @@ def placeOrder(userid):
 
     print(f"TOTAL BILL AMT  ${totalamt}")
 
-    
+
 
     confirm  = input("Click 1 to confirm")
     if confirm=="1":
