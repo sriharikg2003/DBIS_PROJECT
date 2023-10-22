@@ -1,44 +1,48 @@
--- Drop Wishlistitem table
+-- Drop the 'wishlistitem' table
 DROP TABLE IF EXISTS wishlistitem;
 
--- Drop Wishlists table
+-- Drop the 'wishlists' table
 DROP TABLE IF EXISTS wishlists;
 
--- Drop Sellerproducts table
+-- Drop the 'sellerproducts' table
 DROP TABLE IF EXISTS sellerproducts;
 
--- Drop Coupon table
+-- Drop the 'coupon' table
 DROP TABLE IF EXISTS coupon;
 
--- Drop Shipment table
+-- Drop the 'shipment' table
 DROP TABLE IF EXISTS shipment;
 
--- Drop Orderitem table
+-- Drop the 'orderitem' table
 DROP TABLE IF EXISTS orderitem;
 
--- Drop Order table
+-- Drop the 'order' table
 DROP TABLE IF EXISTS order;
 
--- Drop Paymentsmethod table
+-- Drop the 'paymentsmethod' table
 DROP TABLE IF EXISTS paymentsmethod;
 
--- Drop Wallet table
+-- Drop the 'wallet' table
 DROP TABLE IF EXISTS wallet;
 
--- Drop Reviews table
+-- Drop the 'reviews' table
 DROP TABLE IF EXISTS reviews;
 
--- Drop Product table
+-- Drop the 'product' table
 DROP TABLE IF EXISTS product;
 
--- Drop Categories table
+-- Drop the 'categories' table
 DROP TABLE IF EXISTS categories;
 
--- Drop Users table
+-- Drop the 'users' table
 DROP TABLE IF EXISTS users;
 
--- Drop Addresses table
+-- Drop the 'addresses' table
 DROP TABLE IF EXISTS addresses;
+
+-- Drop the ENUM type if you no longer need it
+DROP TYPE IF EXISTS USERTYPE_ENUM;
+
 
 
 -- Addresses table
@@ -51,6 +55,8 @@ CREATE TABLE addresses (
     postalcode VARCHAR(10)
 );
 
+CREATE TYPE USERTYPE_ENUM AS ENUM ('customer', 'delivery-person', 'seller', 'owner', 'admin');
+
 -- Users table
 CREATE TABLE users (
     userid SERIAL PRIMARY KEY,
@@ -61,7 +67,7 @@ CREATE TABLE users (
     lastname VARCHAR(255),
     addressid SERIAL,
     dob DATE,
-    usertype VARCHAR('customer','delivery-person','seller','owner','admin'),
+    usertype USERTYPE_ENUM,
     FOREIGN KEY (addressid) REFERENCES addresses(addressid)
 );
 
@@ -112,7 +118,7 @@ CREATE TABLE paymentsmethod (
 );
 
 -- Order table
-CREATE TABLE order(
+CREATE TABLE order (
     orderid SERIAL PRIMARY KEY,
     userid SERIAL,
     orderdate DATE,
