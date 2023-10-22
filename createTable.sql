@@ -162,15 +162,6 @@ CREATE TABLE coupon (
     FOREIGN KEY (orderid) REFERENCES orders(orderid)
 );
 
--- Sellerproducts table
-CREATE TABLE sellerproducts (
-    sellerproductid SERIAL PRIMARY KEY,
-    sellerid SERIAL,
-    productid SERIAL,
-    FOREIGN KEY (sellerid) REFERENCES users(userid),
-    FOREIGN KEY (productid) REFERENCES product(productid)
-);
-
 -- Wishlists table
 CREATE TABLE wishlists (
     wishlistid SERIAL PRIMARY KEY,
