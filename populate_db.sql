@@ -42,18 +42,18 @@ VALUES
     ('Office Supplies');
 
 -- Product Table
-INSERT INTO product (productname, description, price, stockqty, categoryid)
+INSERT INTO product (productname, description, price, stockqty, categoryid, sellerid)
 VALUES
-    ('Smartphone', 'High-end smartphone with great features', 599.99, 50, 1),
-    ('T-shirt', 'Cotton t-shirt in various colors', 19.99, 100, 2),
-    ('Lawn Mower', 'Electric lawn mower for small yards', 199.99, 30, 3),
-    ('The Great Gatsby', 'Classic novel by F. Scott Fitzgerald', 9.99, 75, 4),
-    ('Soccer Ball', 'Official-size soccer ball', 24.99, 40, 5),
-    ('Board Game', 'Family board game for 4 players', 39.99, 20, 6),
-    ('Shampoo', 'Moisturizing shampoo for all hair types', 8.99, 60, 7),
-    ('Coffee Beans', 'Premium Arabica coffee beans', 12.99, 100, 8),
-    ('Car Battery', '12V car battery for most vehicles', 69.99, 15, 9),
-    ('Printer Paper', 'High-quality printer paper, 500 sheets', 7.99, 50, 10);
+    ('Smartphone', 'High-end smartphone with great features', 599.99, 50, 1, 3),
+    ('T-shirt', 'Cotton t-shirt in various colors', 19.99, 100, 2, 3),
+    ('Lawn Mower', 'Electric lawn mower for small yards', 199.99, 30, 3, 3),
+    ('The Great Gatsby', 'Classic novel by F. Scott Fitzgerald', 9.99, 75, 4, 3),
+    ('Soccer Ball', 'Official-size soccer ball', 24.99, 40, 5, 3),
+    ('Board Game', 'Family board game for 4 players', 39.99, 20, 6, 6),
+    ('Shampoo', 'Moisturizing shampoo for all hair types', 8.99, 60, 7, 6),
+    ('Coffee Beans', 'Premium Arabica coffee beans', 12.99, 100, 8, 6),
+    ('Car Battery', '12V car battery for most vehicles', 69.99, 15, 9, 6),
+    ('Printer Paper', 'High-quality printer paper, 500 sheets', 7.99, 50, 10, 6);
 
 -- Reviews Table
 INSERT INTO reviews (userid, productid, rating, reviewtext, reviewdate)
