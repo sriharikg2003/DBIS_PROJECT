@@ -68,6 +68,7 @@ def signup():
                 new_user = cursor.fetchone()[0]
                 conn.commit()
                 print("Signed up successfully")
+                print(new_user)
                 return new_user
             else:
                 while verifyOTP(otp) == False:
@@ -75,6 +76,7 @@ def signup():
                 add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING *"
                 cursor.execute(add_user_query)
                 new_user = cursor.fetchone()[0]
+                print(new_user)
                 conn.commit()
                 print("Signed up successfully")
                 return new_user
@@ -82,7 +84,5 @@ def signup():
         conn.rollback()
         print(error)
         signup()
-
-
-conn.close()
-cursor.close()
+    conn.close()
+    cursor.close()

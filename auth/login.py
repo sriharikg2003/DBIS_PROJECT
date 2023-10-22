@@ -86,7 +86,5 @@ def login():
         conn.rollback()
         print("DB Error")
         login()
-
-
-conn.close()
-cursor.close()
+    conn.close()
+    cursor.close()
