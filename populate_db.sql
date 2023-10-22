@@ -16,15 +16,15 @@ VALUES
 INSERT INTO users (username, email, password, firstname, lastname, addressid, dob, usertype)
 VALUES
     ('john_doe', 'john.doe@email.com', 'password123', 'John', 'Doe', 1, '1990-01-15', 'customer'),
-    ('jane_smith', 'jane.smith@email.com', 'secret456', 'Jane', 'Smith', 2, 'delivery-person'),
-    ('alice_green', 'alice.green@email.com', 'green123', 'Alice', 'Green', 3, 'seller'),
-    ('bob_jones', 'bob.jones@email.com', 'jones456', 'Bob', 'Jones', 1, 'customer'),
-    ('susan_white', 'susan.white@email.com', 'whitepass', 'Susan', 'White', 4, 'customer'),
-    ('david_brown', 'david.brown@email.com', 'brown123', 'David', 'Brown', 3, 'seller'),
-    ('sarah_harris', 'sarah.harris@email.com', 'sarah789', 'Sarah', 'Harris', 6, 'customer'),
-    ('james_wilson', 'james.wilson@email.com', 'wilson456', 'James', 'Wilson', 5, 'seller'),
-    ('emily_adams', 'emily.adams@email.com', 'adams123', 'Emily', 'Adams', 4, 'customer'),
-    ('michael_clark', 'michael.clark@email.com', 'michael456', 'Michael', 'Clark', 6, 'seller');
+    ('jane_smith', 'jane.smith@email.com', 'secret456', 'Jane', 'Smith', 2,  '1990-01-15','delivery-person'),
+    ('alice_green', 'alice.green@email.com', 'green123', 'Alice', 'Green', 3, '1990-01-15', 'seller'),
+    ('bob_jones', 'bob.jones@email.com', 'jones456', 'Bob', 'Jones', 1, '1990-01-15', 'customer'),
+    ('susan_white', 'susan.white@email.com', 'whitepass', 'Susan', 'White', 4, '1990-01-15', 'customer'),
+    ('david_brown', 'david.brown@email.com', 'brown123', 'David', 'Brown', 3, '1990-01-15', 'seller'),
+    ('sarah_harris', 'sarah.harris@email.com', 'sarah789', 'Sarah', 'Harris', 6, '1990-01-15', 'customer'),
+    ('james_wilson', 'james.wilson@email.com', 'wilson456', 'James', 'Wilson', 5, '1990-01-15', 'seller'),
+    ('emily_adams', 'emily.adams@email.com', 'adams123', 'Emily', 'Adams', 4,  '1990-01-15','customer'),
+    ('michael_clark', 'michael.clark@email.com', 'michael456', 'Michael', 'Clark', 6, '1990-01-15', 'seller');
 
 
 -- Categories Table
@@ -132,12 +132,12 @@ VALUES
     (2, '2023-10-17', '2023-10-21', '2023-10-22', 'Delivered', 3),
     (3, '2023-10-18', '2023-10-22', '2023-10-23', 'Delivered', 4),
     (4, '2023-10-19', '2023-10-23', '2023-10-24', 'In Transit', 5),
-    (5, '2023-10-20', '2023-10-24', NULL, 'In Transit', NULL),
-    (6, '2023-10-21', '2023-10-25', NULL, 'In Transit', NULL),
-    (7, '2023-10-22', '2023-10-26', NULL, 'In Transit', NULL),
-    (8, '2023-10-23', '2023-10-27', NULL, 'In Transit', NULL),
-    (9, '2023-10-24', '2023-10-28', NULL, 'In Transit', NULL),
-    (10, '2023-10-25', '2023-10-29', NULL, 'In Transit', NULL);
+    (5, '2023-10-20', '2023-10-24', NULL, 'In Transit', 2),
+    (6, '2023-10-21', '2023-10-25', NULL, 'In Transit', 2),
+    (7, '2023-10-22', '2023-10-26', NULL, 'In Transit', 2),
+    (8, '2023-10-23', '2023-10-27', NULL, 'In Transit', 2),
+    (9, '2023-10-24', '2023-10-28', NULL, 'In Transit', 2),
+    (10, '2023-10-25', '2023-10-29', NULL, 'In Transit', 2);
 
 -- Coupon Table
 INSERT INTO coupon (couponcode, discountpercentage, expirationdate, orderid)
