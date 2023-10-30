@@ -6,7 +6,7 @@ try:
         database="flipkart",
         host="localhost",
         user="postgres",
-        password="1234",
+        password="123456",
         port=5432,
     )
 except:
@@ -45,7 +45,5 @@ def addProduct(seller):
             return
         else:
             addProduct(seller)
-
-
-conn.close()
-cursor.close()
+    # conn.close()
+    # cursor.close()

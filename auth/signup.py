@@ -10,7 +10,7 @@ try:
         database="flipkart",
         host="localhost",
         user="postgres",
-        password="1234",
+        password="123456",
         port=5432,
     )
 except:
@@ -84,5 +84,5 @@ def signup():
         conn.rollback()
         print(error)
         signup()
-    conn.close()
-    cursor.close()
+    # conn.close()
+    # cursor.close()

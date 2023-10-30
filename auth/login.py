@@ -3,18 +3,19 @@ import sys
 import getpass
 import smtplib
 import random
+from psycopg2.extras import DictCursor
 
 try:
     conn = psycopg2.connect(
         database="flipkart",
         host="localhost",
         user="postgres",
-        password="1234",
+        password="123456",
         port=5432,
     )
 except:
     sys.exit("Failed to connect to the database")
-cursor = conn.cursor()
+cursor = conn.cursor(cursor_factory=DictCursor)
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
@@ -49,13 +50,14 @@ def login():
     password = getpass.getpass("Enter your password: ")
     try:
         cursor.execute(
-            "SELECT userid, firstname FROM users WHERE email = %s AND password = %s",
+            "SELECT * FROM users WHERE email = %s AND password = %s",
             (email, password),
         )
         user = cursor.fetchone()
         if user:
-            print("Welcome, {}!".format(user[1]))
-            return user[0]
+            # print("Welcome, {}!".format(user[1]))
+            print(user)
+            return user
         else:
             print("Invalid email or password.")
             choice = int(input("Enter:\n1.Retry\n2.Forgot Password?\n"))
@@ -71,11 +73,12 @@ def login():
                         conn.commit()
                         print("Password Changed Succesfully")
                         cursor.execute(
-                            "SELECT userid, firstname FROM users WHERE email = %s AND password = %s",
+                            "SELECT * FROM users WHERE email = %s AND password = %s",
                             (email, new_password),
                         )
                         user = cursor.fetchone()
-                        return user[0]
+                        print(user)
+                        return user
                     else:
                         print("Invalid OTP")
                         login()
@@ -86,5 +89,5 @@ def login():
         conn.rollback()
         print("DB Error")
         login()
-    conn.close()
-    cursor.close()
+    # conn.close()
+    # cursor.close()
