@@ -10,7 +10,7 @@ try:
         database="flipkart",
         host="localhost",
         user="postgres",
-        password="123456",
+        password="1234",
         port=5432,
     )
 except:
@@ -22,6 +22,19 @@ SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 SMTP_PASSWORD = "vjloqtoktdhstxjw"
 SENDER_EMAIL = "mandardeshpande2003@gmail.com"
+
+
+def print_message():
+    pattern = r"""
+*****************************************************************
+*                                                               *
+*                     Welcome to Flipkart                       *
+*                   Signed up successfully                      *
+*                 Thank you for choosing our service            *
+*                                                               *
+*****************************************************************
+    """
+    print(pattern)
 
 
 def send_otp(email, otp):
@@ -36,13 +49,16 @@ def send_otp(email, otp):
         return True
     except smtplib.SMTPException as e:
         print("Failed to send OTP, RESENDING... ")
-        return False
+        otp = str(random.randint(100000, 999999))
+        send_otp(email, otp)
 
 
 def verifyOTP(otp):
     enteredOTP = input("Enter OTP: ")
     if enteredOTP == otp:
         return True
+    else:
+        print("Incorrect OTP")
     return False
 
 
@@ -51,24 +67,27 @@ def signup():
     password = input("Enter Password: ")
     firstname = input("Enter firstname: ")
     lastname = input("Enter Lastname: ")
-    dob = input("Enter Date of birth DD/MM/YYYY: ")
     usertype = input("Select role ('customer', 'delivery-person', 'seller'): ")
     try:
         otp = str(random.randint(100000, 999999))
         try:
-            dob_date = datetime.strptime(dob, "%d/%m/%Y").date()
+            dob_date = datetime.strptime("01/01/2001", "%d/%m/%Y").date()
             dob_formatted = dob_date.strftime("%Y-%m-%d")
         except ValueError:
             print("Invalid date format. Please use DD/MM/YYYY format.")
-            signup()
+            return
         if send_otp(email, otp):
             if verifyOTP(otp):
                 add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING *"
                 cursor.execute(add_user_query)
                 new_user = cursor.fetchone()[0]
+                create_wallet = (
+                    f"INSERT INTO wallet (userid,balance) VALUES ({new_user},0);"
+                )
+                cursor.execute(create_wallet)
                 conn.commit()
-                print("Signed up successfully")
-                print(new_user)
+                print_message()
+                # print(new_user)
                 return new_user
             else:
                 while verifyOTP(otp) == False:
@@ -76,13 +95,15 @@ def signup():
                 add_user_query = f"INSERT INTO users ( email, password, firstname, lastname, dob, usertype) VALUES ('{email}','{password}','{firstname}','{lastname}','{dob_formatted}','{usertype}') RETURNING *"
                 cursor.execute(add_user_query)
                 new_user = cursor.fetchone()[0]
+                create_wallet = (
+                    f"INSERT INTO wallet (userid,balance) VALUES ({new_user},0);"
+                )
+                cursor.execute(create_wallet)
                 print(new_user)
                 conn.commit()
-                print("Signed up successfully")
-                return new_user
+                print_message()
+                # return new_user
     except psycopg2.DatabaseError as error:
         conn.rollback()
         print(error)
         signup()
-    # conn.close()
-    # cursor.close()

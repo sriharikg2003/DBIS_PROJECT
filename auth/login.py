@@ -10,7 +10,7 @@ try:
         database="flipkart",
         host="localhost",
         user="postgres",
-        password="123456",
+        password="1234",
         port=5432,
     )
 except:
@@ -21,6 +21,18 @@ SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 SMTP_PASSWORD = "vjloqtoktdhstxjw"
 SENDER_EMAIL = "mandardeshpande2003@gmail.com"
+
+
+def print_message():
+    pattern = r"""
+*****************************************************************
+*                                                               *
+*                     Welcome to Flipkart                       *
+*                   Logged in successfully                      *
+*                                                               *
+*****************************************************************
+    """
+    print(pattern)
 
 
 def send_otp(email, otp):
@@ -35,7 +47,8 @@ def send_otp(email, otp):
         return True
     except smtplib.SMTPException as e:
         print("Failed to send OTP, RESENDING... ")
-        return False
+        otp = str(random.randint(100000, 999999))
+        send_otp(email, otp)
 
 
 def verifyOTP(otp):
@@ -55,9 +68,8 @@ def login():
         )
         user = cursor.fetchone()
         if user:
-            # print("Welcome, {}!".format(user[1]))
-            print(user)
-            return user
+            print_message()
+            return user[0]
         else:
             print("Invalid email or password.")
             choice = int(input("Enter:\n1.Retry\n2.Forgot Password?\n"))
@@ -77,8 +89,7 @@ def login():
                             (email, new_password),
                         )
                         user = cursor.fetchone()
-                        print(user)
-                        return user
+                        return user[0]
                     else:
                         print("Invalid OTP")
                         login()

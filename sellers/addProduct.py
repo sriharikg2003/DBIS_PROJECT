@@ -6,7 +6,7 @@ try:
         database="flipkart",
         host="localhost",
         user="postgres",
-        password="123456",
+        password="1234",
         port=5432,
     )
 except:
