@@ -64,7 +64,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
-    addressid SERIAL,
+    addressid int,
     dob DATE NOT NULL,
     usertype USERTYPE_ENUM NOT NULL,
     FOREIGN KEY (addressid) REFERENCES addresses(addressid)
@@ -84,8 +84,8 @@ CREATE TABLE product (
     description TEXT,
     price REAL,
     stockqty INT,
-    categoryid SERIAL,
-    sellerid SERIAL,
+    categoryid INT,
+    sellerid int,
     FOREIGN KEY (sellerid) REFERENCES users(userid),
     FOREIGN KEY (categoryid) REFERENCES categories(categoryid)
 );
@@ -93,9 +93,9 @@ CREATE TABLE product (
 -- Reviews table
 CREATE TABLE reviews (
     reviewid SERIAL PRIMARY KEY,
-    userid SERIAL,
-    productid SERIAL,
-    rating SERIAL,
+    userid int,
+    productid int,
+    rating int,
     reviewtext TEXT,
     reviewdate timestamp,
     FOREIGN KEY (userid) REFERENCES users(userid),
@@ -105,7 +105,7 @@ CREATE TABLE reviews (
 -- Wallet table
 CREATE TABLE wallet (
     walletid SERIAL PRIMARY KEY,
-    userid SERIAL,
+    userid int,
     balance REAL,
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
@@ -113,46 +113,11 @@ CREATE TABLE wallet (
 -- Paymentsmethod table
 CREATE TABLE paymentsmethod (
     paymentmethodid SERIAL PRIMARY KEY,
-    userid SERIAL,
+    userid int,
     paymenttype VARCHAR(255),
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
--- Order table
-CREATE TABLE orders (
-    orderid SERIAL PRIMARY KEY,
-    userid SERIAL,
-    orderdate timestamp,
-    totalamt REAL,
-    shippingaddressid SERIAL,
-    paymentmethodid SERIAL,
-    FOREIGN KEY (userid) REFERENCES users(userid),
-    FOREIGN KEY (shippingaddressid) REFERENCES addresses(addressid),
-    FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
-);
-
--- Orderitem table
-CREATE TABLE orderitem (
-    orderitemid SERIAL PRIMARY KEY,
-    orderid SERIAL,
-    productid SERIAL,
-    quantity INT,
-    FOREIGN KEY (orderid) REFERENCES orders(orderid),
-    FOREIGN KEY (productid) REFERENCES product(productid)
-);
-
--- Shipment table
-CREATE TABLE shipment (
-    shipmentid SERIAL PRIMARY KEY,
-    orderid SERIAL,
-    shipmentdate timestamp,
-    estimateddeliverydate timestamp,
-    actualdeliverydate timestamp,
-    shippingstatus VARCHAR(255),
-    deliverypersonID SERIAL,
-    FOREIGN KEY (orderid) REFERENCES orders(orderid),
-    FOREIGN KEY (deliverypersonID) REFERENCES users(userid)
-);
 
 -- Coupon table
 CREATE TABLE coupon (
@@ -164,18 +129,58 @@ CREATE TABLE coupon (
     -- FOREIGN KEY (orderid) REFERENCES orders(orderid)
 );
 
+
+-- Order table
+CREATE TABLE orders (
+    orderid SERIAL PRIMARY KEY,
+    userid int,
+    orderdate timestamp,
+    totalamt REAL,
+    couponid int default 0,
+    shippingaddressid int,
+    paymentmethodid int,
+    FOREIGN KEY (userid) REFERENCES users(userid),
+    FOREIGN KEY (shippingaddressid) REFERENCES addresses(addressid),
+    FOREIGN KEY (paymentmethodid) REFERENCES paymentsmethod(paymentmethodid)
+);
+
+-- Orderitem table
+CREATE TABLE orderitem (
+    orderitemid SERIAL PRIMARY KEY,
+    orderid int,
+    productid int,
+    quantity INT,
+    FOREIGN KEY (orderid) REFERENCES orders(orderid),
+    FOREIGN KEY (productid) REFERENCES product(productid)
+);
+
+-- Shipment table
+CREATE TABLE shipment (
+    shipmentid SERIAL PRIMARY KEY,
+    orderid int,
+    shipmentdate timestamp,
+    estimateddeliverydate timestamp,
+    actualdeliverydate timestamp,
+    shippingstatus VARCHAR(255),
+    deliverypersonID int,
+    FOREIGN KEY (orderid) REFERENCES orders(orderid),
+    FOREIGN KEY (deliverypersonID) REFERENCES users(userid)
+);
+
+
+
 -- Wishlists table
 CREATE TABLE wishlists (
     wishlistid SERIAL PRIMARY KEY,
-    userid SERIAL,
+    userid int,
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
 -- Wishlistitem table
 CREATE TABLE wishlistitem (
     wishlistitemid SERIAL PRIMARY KEY,
-    wishlistid SERIAL,
-    productid SERIAL,
+    wishlistid int,
+    productid int,
     FOREIGN KEY (wishlistid) REFERENCES wishlists(wishlistid),
     FOREIGN KEY (productid) REFERENCES product(productid)
 );

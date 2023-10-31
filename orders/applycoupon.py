@@ -20,7 +20,7 @@ def applycoupon():
         print("ERROR Could not find coupon")
     if len(rows) == 0:
         print("No non-expired coupons available.")
-        return 0
+        return 0,0
     else:
         print("Your coupons are:")
         print("{:<12} {:<15} {:<18}".format("Coupon ID", "Coupon Code", "Discount Percentage"))
@@ -41,7 +41,7 @@ def applycoupon():
         if discount_percentage_tuple:
             discount_percentage = discount_percentage_tuple[0]
             print(f"Selected coupon's discount percentage: {discount_percentage}%")
-            return discount_percentage
+            return discount_percentage, coupon_id
         else:
             print("Coupon not found.")
             return applycoupon()
