@@ -34,13 +34,25 @@ months = [
     "September", "October", "November", "December"
 ]
 
-def displayOptions(sellerid):
+def displayStats(sellerid):
     # Input options
-    print("Choose :\n1: Items sold per product")
+
+    print("Choose to plot:\n1: Items sold per product")
     print("2: Monthly sales")
-    print("3: Category wise sales")
-    chosenOption = input("\n\nEnter the option number")
-    return chosenOption
+    print("3: Go back to Seller's Dashboard")
+    chosenOption = int(input("\n\nEnter the option number"))
+
+    if chosenOption == 1:
+        ItemSoldPerProduct(sellerid)
+        displayStats(sellerid)
+    elif chosenOption == 2:
+        MonthlySales(sellerid)
+        displayStats(sellerid)
+    elif chosenOption == 3:
+         return
+    else:
+        print("Enter valid option")
+     
 
 
 def plotfunction(title, x_data, y_data, x_label, y_label):
@@ -57,6 +69,7 @@ def plotfunction(title, x_data, y_data, x_label, y_label):
     plt.yticks(fontsize=12)
 
     plt.show()
+    return
 
 
 def ItemSoldPerProduct(userid):
@@ -71,10 +84,10 @@ def ItemSoldPerProduct(userid):
             x_data.append(r[0])
             y_data.append(r[1])
         plotfunction("Quanity vs Product Name", x_data, y_data, "Product Name", "Quantity Sold")
-
+        return 
     except:
         print(" ERROR ")
-    pass
+    
 
 def MonthlySales(userid):
     query = f"""
@@ -105,19 +118,12 @@ def MonthlySales(userid):
         for r in rows:
             y_data[int(r[0])-1]  = r[1]
         plotfunction("Monthly sales ", months, y_data, "Month", "Sales in Dollars")
+        return 
 
     except:
         print(" ERROR")
-    pass
-
-def CategorySales(userid):
-    pass
+    
 
 
-def choosePlotFunction(userid, option):
-    if option == 1:
-        ItemSoldPerProduct(userid,option)
-    elif option == 2:
-        MonthlySales(userid,option)
 
     

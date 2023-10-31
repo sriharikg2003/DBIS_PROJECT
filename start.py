@@ -4,9 +4,7 @@ import menu as menu
 from customerDashboard import customerDashboard
 import psycopg2
 import sys
-from sellers import addProduct
-from sellers import displayStats
-from sellers import sellersDashboard
+from sellersDashboard import sellersDashboard
 
 try:
     conn = psycopg2.connect(
@@ -33,7 +31,7 @@ if option == 0:
     if role == "customer":
         customerDashboard(userid)
     if role == "seller":
-        sellersDashboard.sellersDashboard(userid)
+        sellersDashboard(userid)
         # addProduct.addProduct(userid)
     if role == "delivery-person":
         pass
@@ -50,6 +48,6 @@ elif option == 1:
         customerDashboard(userid)
     if role == "seller":
         # addProduct.addProduct(userid)
-        sellersDashboard.sellersDashboard(userid)
+        sellersDashboard(userid)
     if role == "delivery-person":
         pass
