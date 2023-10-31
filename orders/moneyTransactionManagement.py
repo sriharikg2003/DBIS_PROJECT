@@ -56,7 +56,7 @@ def moneyTransactionManagement(
     except:
         print("ERROR Could not find coupon")
 
-    print("INSERT INTO paymentsmrethod ")
+    # print("INSERT INTO paymentsmrethod ")
 
     if walletproceed:
         new_balance = availablebalance - totalamt
@@ -108,8 +108,12 @@ def moneyTransactionManagement(
         print("ERROR Could not set orders")
 
     shipping_status = "In Transit"  # Corrected variable name
-    q2 = f"SELECT userid from users where usertype='delivery-person' ORDER BY randob() LIMIT 1;"
-    cursor.execute(q2)
+    q2 = f"SELECT userid from users where usertype='delivery-person' ORDER BY random() LIMIT 1;"
+    try:
+        cursor.execute(q2)
+    except:
+        # print(" RANDON ERROE", q2)
+        print("Error in assigning delivery boy")
     randomdelboy = cursor.fetchone()[0]
     deliveryboyid = randomdelboy
     insert_query = """
@@ -127,6 +131,7 @@ def moneyTransactionManagement(
                 deliveryboyid,
             ),
         )
-    except psycopg2.DatabaseError as e:
-        print(f"Error inserting shipment data: {e}")
+    except :
+        # print(f"Error inserting shipment data: {e}")
+        print("ERROR HERE ", insert_query)
     print("Successfull")

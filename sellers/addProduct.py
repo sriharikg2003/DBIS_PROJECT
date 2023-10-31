@@ -38,6 +38,7 @@ def addProduct(seller):
     try:
         cursor.execute(query)
         conn.commit()
+        print("\nAdded product succesfully")
     except psycopg2.DatabaseError as error:
         conn.rollback()
         print(error)
