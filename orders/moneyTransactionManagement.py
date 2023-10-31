@@ -108,7 +108,10 @@ def moneyTransactionManagement(
         print("ERROR Could not set orders")
 
     shipping_status = "In Transit"  # Corrected variable name
-    deliveryboyid = 2
+    q2 = f"SELECT userid from users where usertype='delivery-person' ORDER BY randob() LIMIT 1;"
+    cursor.execute(q2)
+    randomdelboy = cursor.fetchone()[0]
+    deliveryboyid = randomdelboy
     insert_query = """
     INSERT INTO shipment (orderid, shipmentdate, estimateddeliverydate, shippingstatus, deliverypersonID)
     VALUES (%s, %s, %s, %s, %s);
