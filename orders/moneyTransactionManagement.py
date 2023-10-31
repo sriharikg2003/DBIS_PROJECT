@@ -98,7 +98,7 @@ def moneyTransactionManagement(userid, totalamt, myorderitemsid, demandedQuantit
         print("ERROR Could not set orders")
 
     shipping_status = "On the way"  # Corrected variable name
-    deliveryboyid = 1
+    deliveryboyid = 2
     insert_query = """
     INSERT INTO shipment (orderid, shipmentdate, estimateddeliverydate, shippingstatus, deliverypersonID)
     VALUES (%s, %s, %s, %s, %s);

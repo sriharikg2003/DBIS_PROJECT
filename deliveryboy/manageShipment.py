@@ -20,8 +20,8 @@ def get_pending_shipments(delivery_person_id):
         WHERE deliverypersonID = %s AND shippingstatus = %s
     """
     )
-    cur.execute(query, (delivery_person_id, "Pending"))
-    return cur.fetchall()
+    cur.execute(query, (delivery_person_id, "On the way"))
+    print(cur.fetchall())
 
 
 def update_shipment_status(shipment_id, status, delivery_date):

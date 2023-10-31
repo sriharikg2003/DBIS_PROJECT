@@ -5,7 +5,7 @@ from customerDashboard import customerDashboard
 import psycopg2
 import sys
 from sellersDashboard import sellersDashboard
-
+from deliveryboydashboard import DeliveryDashboard
 try:
     conn = psycopg2.connect(
         database="flipkart",
@@ -34,7 +34,7 @@ if option == 0:
         sellersDashboard(userid)
         # addProduct.addProduct(userid)
     if role == "delivery-person":
-        pass
+        DeliveryDashboard(userid)
 elif option == 1:
     userid = login.login()
     query = f"SELECT usertype from users where userid={userid}"
@@ -50,4 +50,4 @@ elif option == 1:
         # addProduct.addProduct(userid)
         sellersDashboard(userid)
     if role == "delivery-person":
-        pass
+        DeliveryDashboard(userid)

@@ -74,7 +74,24 @@ def placeOrder(userid):
                 conn.execute(query)
                 conn.commit()
             except:
-                print("ERROR Could not insert addressid")
+                print("Enter your default address since no default address found")
+                street = input("Enter street : ")
+                city = input("Enter city : ")
+                state = input("Enter state : ")
+                country = input("Enter country : ")
+                postal_code = input("Enter postal code : ")
+                try:
+                    cursor.execute(
+                        f"INSERT INTO addresses (street, city, state, country, postalcode) VALUES ('{street}', '{city}', '{state}', '{country}', '{postal_code}') RETURNING *;"
+                    )
+                    inserted_id = int(cursor.fetchone()[0])
+                    cursor.execute(
+                        f"UPDATE orders SET shippingaddressid = {inserted_id} WHERE orderid = {orderid};"
+                    )
+                    conn.commit()
+                except psycopg2.DatabaseError as error:
+                    conn.rollback()
+                    print(error)
         elif choice == 2:
             street = input("Enter street : ")
             city = input("Enter city : ")
