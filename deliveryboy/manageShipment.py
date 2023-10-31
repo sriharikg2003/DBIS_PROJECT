@@ -15,16 +15,17 @@ cur = conn.cursor()
 def get_pending_shipments(delivery_person_id):
     query = sql.SQL(
         """
-        SELECT shipmentid, orderid, shipmentdate, shippingstatus 
+        SELECT shipmentid, shipmentdate, shippingstatus 
         FROM shipment 
         WHERE deliverypersonID = %s AND shippingstatus = %s
     """
     )
-    cur.execute(query, (delivery_person_id, "On the way"))
-    print(cur.fetchall())
+    cur.execute(query, (delivery_person_id, "In Transit"))
+    for x in cur.fetchall():
+        print(x)
 
 
-def update_shipment_status(shipment_id, status, delivery_date):
+def update_shipment_status(shipment_id, status):
     query = sql.SQL(
         """
         UPDATE shipment 
@@ -32,12 +33,19 @@ def update_shipment_status(shipment_id, status, delivery_date):
         WHERE shipmentid = %s
     """
     )
-    cur.execute(query, (status, delivery_date, shipment_id))
-    conn.commit()
+    try:
+        cur.execute("SELECT NOW()")
+        ts = cur.fetchone()[0]
+        cur.execute(query, (status, ts, shipment_id))
+        conn.commit()
+        print("Updated shipment status successfully.\n")
+    except:
+        print("failed to update.")
+        conn.rollback()
 
 
-def mark_shipment_delivered(shipment_id, delivery_date):
-    update_shipment_status(shipment_id, "Delivered", delivery_date)
+def mark_shipment_delivered(shipment_id):
+    update_shipment_status(shipment_id, "Delivered")
 
 
 def get_delivery_person_orders(delivery_person_id):
@@ -49,5 +57,11 @@ def get_delivery_person_orders(delivery_person_id):
         WHERE shipment.deliverypersonID = %s
     """
     )
-    cur.execute(query, (delivery_person_id,))
-    return cur.fetchall()
+    try:
+        cur.execute(query, (delivery_person_id,))
+        for i in cur.fetchall():
+            print(i)
+        if len(cur.fetchall()):
+            print("No orders found")
+    except:
+        print("Somethong went wrong")
