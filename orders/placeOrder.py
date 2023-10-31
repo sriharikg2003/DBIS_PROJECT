@@ -3,6 +3,7 @@ from conn import conn
 from conn import psycopg2
 from applycoupon import applycoupon
 from moneyTransactionManagement import moneyTransactionManagement
+from goto import with_goto
 
 
 def placeOrder(userid):
@@ -60,7 +61,50 @@ def placeOrder(userid):
         discount_percentage, coupon_id = applycoupon()
         totalamt = totalamt * (1 - (discount_percentage / 100))
         print(f"TOTAL BILL AMT  ${totalamt}")
-
+        # label.choice
+        choice = int(
+            input("Enter \n1.to select default address\n2.deliver to a new address\n")
+        )
+        if choice == 1:
+            try:
+                query = f"select addressid from users where userid = {userid}"
+                conn.execute(query)
+                addressid = int(cursor.fetchone())
+                query = f"update orders set shippingaddressid = '{addressid}' where orderid = '{orderid}');"
+                conn.execute(query)
+                conn.commit()
+            except:
+                print("ERROR Could not insert addressid")
+        elif choice == 2:
+            street = input("Enter street : ")
+            city = input("Enter city : ")
+            state = input("Enter state : ")
+            country = input("Enter country : ")
+            postal_code = input("Enter postal code : ")
+            try:
+                cursor.execute(
+                    f"INSERT INTO addresses (street, city, state, country, postalcode) VALUES ('{street}', '{city}', '{state}', '{country}', '{postal_code}') RETURNING *;"
+                )
+                inserted_id = int(cursor.fetchone()[0])
+                cursor.execute(
+                    f"UPDATE orders SET shippingaddressid = {inserted_id} WHERE orderid = {orderid};"
+                )
+                conn.commit()
+            except psycopg2.DatabaseError as error:
+                conn.rollback()
+                print(error)
+        else:
+            print("invalid choice \n defaulting to personal address")
+            try:
+                query = f"select addressid from users where userid = {userid}"
+                conn.execute(query)
+                addressid = int(cursor.fetchone())
+                query = f"update orders set shippingaddressid = '{addressid}' where orderid = '{orderid}');"
+                conn.execute(query)
+                conn.commit()
+            except:
+                print("ERROR Could not insert addressid")
+            # goto .choice
         confirm = input("Click 1 to confirm")
         if confirm == "1":
             print("Proceeding to payments page...")
@@ -71,7 +115,6 @@ def placeOrder(userid):
                     cursor.execute(query)
                 except:
                     print("ERROR Could not insert orderitem")
-
             moneyTransactionManagement(
                 userid,
                 totalamt,

@@ -25,6 +25,7 @@ def viewCategories():
 
 
 def addProduct(seller):
+    print("Add Products\n")
     productname = input("Enter productname: ")
     description = input("Enter product description: ")
     price = float(input("Enter product price: "))
@@ -32,7 +33,7 @@ def addProduct(seller):
     print("enter product category ID from categories shown below: ")
     viewCategories()
     categoryid = input()
-    sellerid = seller.userid
+    sellerid = seller
     query = f"INSERT INTO product (productname, description, price, stockqty, categoryid, sellerid) VALUES ('{productname}', '{description}', {price}, {stockqty}, {categoryid},{sellerid})"
     try:
         cursor.execute(query)
