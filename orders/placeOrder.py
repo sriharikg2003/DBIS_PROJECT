@@ -3,7 +3,6 @@ from conn import conn
 from conn import psycopg2
 from applycoupon import applycoupon
 from moneyTransactionManagement import moneyTransactionManagement
-from goto import with_goto
 
 
 def placeOrder(userid):
@@ -121,7 +120,6 @@ def placeOrder(userid):
                 conn.commit()
             except:
                 print("ERROR Could not insert addressid")
-            # goto .choice
         confirm = input("Click 1 to confirm")
         if confirm == "1":
             print("Proceeding to payments page...")
