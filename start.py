@@ -16,38 +16,43 @@ try:
     )
 except:
     sys.exit("Failed to connect to the database")
-cursor = conn.cursor()
 
-option = menu.menu("Authenticate", ["Signup", "SignIn"], "red")
-if option == 0:
-    userid = signup.signup()
-    query = f"SELECT usertype from users where userid={userid}"
-    try:
-        cursor.execute(query)
-        role = cursor.fetchone()[0]
-        print(role)
-    except:
-        print("failed to execute")
-    if role == "customer":
-        customerDashboard(userid)
-    if role == "seller":
-        sellersDashboard(userid)
-        # addProduct.addProduct(userid)
-    if role == "delivery-person":
-        DeliveryDashboard(userid)
-elif option == 1:
-    userid = login.login()
-    query = f"SELECT usertype from users where userid={userid}"
-    try:
-        cursor.execute(query)
-        role = cursor.fetchone()[0]
-        print(role)
-    except:
-        print("failed to execute")
-    if role == "customer":
-        customerDashboard(userid)
-    if role == "seller":
-        # addProduct.addProduct(userid)
-        sellersDashboard(userid)
-    if role == "delivery-person":
-        DeliveryDashboard(userid)
+
+try:    
+    cursor = conn.cursor()
+
+    option = menu.menu("Authenticate", ["Signup", "SignIn"], "red")
+    if option == 0:
+        userid = signup.signup()
+        query = f"SELECT usertype from users where userid={userid}"
+        try:
+            cursor.execute(query)
+            role = cursor.fetchone()[0]
+            print(role)
+        except:
+            print("failed to execute")
+        if role == "customer":
+            customerDashboard(userid)
+        if role == "seller":
+            sellersDashboard(userid)
+            # addProduct.addProduct(userid)
+        if role == "delivery-person":
+            DeliveryDashboard(userid)
+    elif option == 1:
+        userid = login.login()
+        query = f"SELECT usertype from users where userid={userid}"
+        try:
+            cursor.execute(query)
+            role = cursor.fetchone()[0]
+            print(role)
+        except:
+            print("failed to execute")
+        if role == "customer":
+            customerDashboard(userid)
+        if role == "seller":
+            # addProduct.addProduct(userid)
+            sellersDashboard(userid)
+        if role == "delivery-person":
+            DeliveryDashboard(userid)
+except:
+    print("\nThank you for using FLIPKART. Visit us again..!")

@@ -20,13 +20,16 @@ def DeliveryDashboard(userid):
         manageShipment.get_pending_shipments(userid)
         DeliveryDashboard(userid)
     if ret_val == 2:
-        manageShipment.get_pending_shipments(userid)
-        x = int(input("Enter shipment ID"))
-        manageShipment.mark_shipment_delivered(x)
+        if  not (manageShipment.get_pending_shipments(userid)==0):
+            x = int(input("\nEnter shipment ID"))
+            manageShipment.mark_shipment_delivered(x)
+        else:
+            print("\nYou have no orders")
+
         DeliveryDashboard(userid)
     if ret_val == 3:
         manageShipment.get_delivery_person_orders(userid)
         DeliveryDashboard(userid)
     if ret_val == 4:
-        print("Thank you for using flipkart")
+        print("\nThank you for using flipkart")
         SystemExit()

@@ -21,8 +21,14 @@ def get_pending_shipments(delivery_person_id):
     """
     )
     cur.execute(query, (delivery_person_id, "In Transit"))
-    for x in cur.fetchall():
+    print("\nYour pending shipments:")
+
+    results =  cur.fetchall()
+    for x in results:
         print(x)
+    print("\n")
+
+    return len(results)
 
 
 def update_shipment_status(shipment_id, status):
@@ -59,9 +65,17 @@ def get_delivery_person_orders(delivery_person_id):
     )
     try:
         cur.execute(query, (delivery_person_id,))
-        for i in cur.fetchall():
-            print(i)
-        if len(cur.fetchall()):
+
+        # print("LEN ", len(cur.fetchall()))
+        results = cur.fetchall()
+        # print("LEN ", len(cur.fetchall()))
+
+        if not len(results):
             print("No orders found")
+        else:
+            print("\nYour order for delivery\n")
+            for i in results:
+                print(i)
+
     except:
         print("Somethong went wrong")

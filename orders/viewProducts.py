@@ -7,7 +7,7 @@ def viewProducts():
         query = """
         SELECT p.productid, p.productname, p.description, p.price, p.stockqty, c.category
         FROM product p
-        JOIN categories c ON p.categoryid = c.categoryid;
+        JOIN categories c ON p.categoryid = c.categoryid order by  p.productid ;
         """
         cursor.execute(query)
         rows = cursor.fetchall()
