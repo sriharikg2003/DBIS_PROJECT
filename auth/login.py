@@ -74,7 +74,7 @@ def login():
             print("Invalid email or password.")
             choice = int(input("Enter:\n1.Retry\n2.Forgot Password?\n"))
             if choice == 1:
-                login()
+                return login()
             elif choice == 2:
                 otp = str(random.randint(100000, 999999))
                 if send_otp(email, otp):

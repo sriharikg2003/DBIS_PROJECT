@@ -35,7 +35,6 @@ try:
             customerDashboard(userid)
         if role == "seller":
             sellersDashboard(userid)
-            # addProduct.addProduct(userid)
         if role == "delivery-person":
             DeliveryDashboard(userid)
     elif option == 1:
@@ -50,7 +49,6 @@ try:
         if role == "customer":
             customerDashboard(userid)
         if role == "seller":
-            # addProduct.addProduct(userid)
             sellersDashboard(userid)
         if role == "delivery-person":
             DeliveryDashboard(userid)
