@@ -71,7 +71,6 @@ def placeOrder(userid):
                 addressid = int(cursor.fetchone())
                 query = f"update orders set shippingaddressid = '{addressid}' where orderid = '{orderid}');"
                 conn.execute(query)
-                conn.commit()
             except:
                 print("Enter your default address since no default address found")
                 street = input("Enter street : ")
@@ -87,7 +86,6 @@ def placeOrder(userid):
                     cursor.execute(
                         f"UPDATE orders SET shippingaddressid = {inserted_id} WHERE orderid = {orderid};"
                     )
-                    conn.commit()
                 except psycopg2.DatabaseError as error:
                     conn.rollback()
                     print(error)
@@ -105,7 +103,6 @@ def placeOrder(userid):
                 cursor.execute(
                     f"UPDATE orders SET shippingaddressid = {inserted_id} WHERE orderid = {orderid};"
                 )
-                conn.commit()
             except psycopg2.DatabaseError as error:
                 conn.rollback()
                 print(error)
@@ -117,7 +114,6 @@ def placeOrder(userid):
                 addressid = int(cursor.fetchone())
                 query = f"update orders set shippingaddressid = '{addressid}' where orderid = '{orderid}');"
                 conn.execute(query)
-                conn.commit()
             except:
                 print("ERROR Could not insert addressid")
         confirm = input("Click 1 to confirm")
